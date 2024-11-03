@@ -45,7 +45,8 @@ def get_context_graph(output_folder, codeloc):
     reverse_topological_order = list(reversed(list(nx.topological_sort(dag))))
 
     for node in reverse_topological_order:
-        dag.nodes[node]['explain'] = explainfunc(dag.nodes[node]['functionstr'], node, dag)
+        dag.nodes[node]['explain'] = explainfunc(dag.nodes[node]['functionstr'], 
+                                                 node, dag, output_folder)
 
     for node in reverse_topological_order:
         for k, v in dict(dag.nodes[node]).items():
@@ -172,13 +173,14 @@ def get_file_class_func(node, G2):
 def get_fun(x):
     return extract_function_with_used_imports(**x.to_dict())
 
-def explainfunc(function_code, node, graph):
+def explainfunc(function_code, node, graph, context_folder):
     """
     Generates an explanation for the given function_code. If the node has children,
     it includes explanations of the children in the prompt.
     """
     # Step 1: Connect to SQLite database (create it if it doesn't exist)
-    conn = sqlite3.connect('explanations_cache.db')
+    cache_path = os.path.join(context_folder, 'explanations_cache.db')
+    conn = sqlite3.connect(cache_path)
     cursor = conn.cursor()
 
     # Step 2: Create the cache table if it doesn't exist

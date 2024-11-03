@@ -1,3 +1,4 @@
 scratchbook
 .env
 context_*
+*.pyc
