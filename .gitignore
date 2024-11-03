@@ -1,4 +1,69 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+lib/
+lib64/
+*.egg-info/
+.dist-info/
+*.egg
+*.whl
+build/
+develop-eggs/
+downloads/
+eggs/
+eggs-info/
+
+# Logs
+*.log
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+nosetests.xml
+test-results/
+junit.xml
+coverage.xml
+*.cover
+
+# Translations
+*.mo
+*.pot
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.bak
+*.tmp
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Python specific files
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+
+
 scratchbook
 .env
 context_*
-*.pyc
