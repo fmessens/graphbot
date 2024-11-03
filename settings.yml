@@ -1,0 +1,5 @@
+model_ckpt: "sentence-transformers/multi-qa-mpnet-base-dot-v1"
+embedding_location: 'embeddings_dataset.json'
+graph_loc: "dag_output.json"
+samples_return: 5
+RAG_system: 'Graph'
