@@ -1,7 +1,8 @@
 import os
+import sys
 from datetime import datetime
 
-def create_timestamped_folder(prefix, base_path='.'):
+def create_timestamped_folder(prefix, base_path='contexts'):
     """
     Creates a folder with a timestamp suffix.
 
@@ -15,6 +16,8 @@ def create_timestamped_folder(prefix, base_path='.'):
     folder_name = f"{prefix}_{timestamp}"
     
     # Combine the base path with the folder name
+    if not os.path.exists(base_path):
+        os.makedirs(base_path)
     folder_path = os.path.join(base_path, folder_name)
     
     # Create the folder

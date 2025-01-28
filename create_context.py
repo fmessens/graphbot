@@ -12,6 +12,7 @@ def main():
     # Set up argument parsing
     parser = argparse.ArgumentParser(description='Check for .py files in a specified directory.')
     parser.add_argument('--path', type=str, help='The path to the directory to check.')
+    parser.add_argument('--prefix', type=str, help='The prefix of the timestamped folder', default='context')
     # Parse the arguments
     args = parser.parse_args()
 
@@ -25,7 +26,7 @@ def main():
         return
     python_files = find_python_files(directory)
     if python_files:
-        context_path = create_timestamped_folder('context')
+        context_path = create_timestamped_folder(args.prefix)
         get_context_graph(context_path, directory)
         write_embeddings(context_path)
     else:

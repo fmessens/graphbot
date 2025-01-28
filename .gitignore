@@ -67,3 +67,5 @@ coverage.xml
 scratchbook
 .env
 context_*
+explanations_cache.db
+contexts/*
