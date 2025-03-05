@@ -24,6 +24,7 @@ def write_embeddings(contx_folder):
                     .detach()
                     .numpy()[0]})
     embdsdf = embeddings_dataset.to_pandas()
+    
     emb_path = os.path.join(contx_folder, settings['embedding_location'])
     with open(emb_path, 'a') as f:
         embdsdf.to_json(f, orient='records', lines=True) # type: ignore

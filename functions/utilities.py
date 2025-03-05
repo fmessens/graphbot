@@ -11,18 +11,14 @@ def create_timestamped_folder(prefix, base_path='contexts'):
     """
     # Get the current timestamp formatted as YYYYMMDD_HHMMSS
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
     # Create the folder name
     folder_name = f"{prefix}_{timestamp}"
-    
     # Combine the base path with the folder name
     if not os.path.exists(base_path):
         os.makedirs(base_path)
     folder_path = os.path.join(base_path, folder_name)
-    
     # Create the folder
     os.makedirs(folder_path)
-    
     return folder_path
 
 
