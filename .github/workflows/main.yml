@@ -105,6 +105,6 @@ jobs:
           git commit -m "Add processed code with docstrings"
 
           # Push changes to the repository
-          git push origin main
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/fmessens/graphbot.git HEAD:$GITHUB_REF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
