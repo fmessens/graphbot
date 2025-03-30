@@ -1,7 +1,0 @@
-pylint
-code2flow
-torch==1.13
-transformers
-datasets
-faiss-cpu
-langchain-mistralai

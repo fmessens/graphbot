@@ -96,10 +96,10 @@ jobs:
       - name: Commit and push processed codebase
         run: |
           # Unzip the processed code
-          unzip processed_code.zip -d processed_code/
+          unzip -o processed_code.zip -d .
 
-          # Add the processed code to the repository
-          git add processed_code/*
+          # Add all modified files in the repository (no specific folder needed)
+          git add .
 
           # Commit the changes
           git commit -m "Add processed code with docstrings"
