@@ -87,3 +87,24 @@ jobs:
                   print("⚠️ Error polling job status:", poll_response.json())
               time.sleep(polling_interval)
           EOF
+
+      - name: Set up Git for commit
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Commit and push processed codebase
+        run: |
+          # Unzip the processed code
+          unzip processed_code.zip -d processed_code/
+
+          # Add the processed code to the repository
+          git add processed_code/*
+
+          # Commit the changes
+          git commit -m "Add processed code with docstrings"
+
+          # Push changes to the repository
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
