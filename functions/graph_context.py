@@ -30,6 +30,7 @@ def get_context_graph(output_folder, codeloc):
     source_G = source_G.replace('name=','naming=')
     G2 = from_pydot(pydot.graph_from_dot_data(source_G)[0]) # type: ignore
     metadata = {x: get_file_class_func(x, G2) for x in list(G2.nodes)}
+    print(metadata)
     filenames = {k: v[0] for k,v in metadata.items()}
     classnames = {k: v[1] for k,v in metadata.items()}
     function_names = {k: v[2] for k,v in metadata.items()}
@@ -56,6 +57,7 @@ def get_context_graph(output_folder, codeloc):
     data = nx.node_link_data(dag)
     with open(os.path.join(output_folder, settings['graph_loc']), "w") as f:
         json.dump(data, f, indent=2)
+    return dag
     
 
 
@@ -159,6 +161,7 @@ def get_used_names(node):
 
 def get_file_class_func(node, G2):
     basis_node = G2.nodes[node]
+    print(basis_node)
     filestr = basis_node['naming'].split('::')[0]
     syntaxstr = basis_node['naming'].split('::')[1]
     file_name = filestr.replace('"','').replace('\\','/')+'.py'
@@ -254,5 +257,41 @@ Provide a step-by-step explanation. Please only provide the docstring without an
 
     # Step 11: Return the explanation
     return explanation
+
+
+def add_docstrings_from_graph(graph):
+    for node in graph.nodes:
+        file_path = node['file_name']
+        function_name = node['function_name']
+        new_docstring = node['explain']
+
+        if not function_name or not new_docstring:
+            continue
+
+        with open(file_path, 'r') as file:
+            source_code = file.read()
+
+        # Parse the source code into an AST
+        tree = ast.parse(source_code)
+
+        # Initialize a flag to check if the function was found
+        function_found = False
+
+        # Traverse the AST to find the function definition
+        for item in tree.body:
+            if isinstance(item, ast.FunctionDef) and item.name == function_name:
+                function_found = True
+                # Check if the function already has a docstring
+                if not ast.get_docstring(item):
+                    # Add the new docstring
+                    item.body.insert(0, ast.Expr(value=ast.Constant(value=new_docstring)))
+                break
+
+        if function_found:
+            # Write the modified AST back to the file
+            with open(file_path, 'w') as file:
+                file.write(ast.unparse(tree))
+        else:
+            print(f"Function {function_name} not found in {file_path}")
 
 

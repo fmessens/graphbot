@@ -5,3 +5,5 @@ transformers
 datasets
 faiss-cpu
 langchain-mistralai
+networkx
+langchain-community
