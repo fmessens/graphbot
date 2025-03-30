@@ -30,8 +30,8 @@ jobs:
           import requests
 
           # API endpoints
-          UPLOAD_URL = "https://www.sourcemix.tech/pythondoc/castor"
-          POLL_URL = "https://www.sourcemix.tech/task"
+          UPLOAD_URL = "https://www.sourcemix.tech/docbot/pythondoc/castor"
+          POLL_URL = "https://www.sourcemix.tech/docbot/task"
           
           # ZIP file path
           zip_file_path = "python_code.zip"
