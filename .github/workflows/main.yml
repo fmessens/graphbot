@@ -1,0 +1,89 @@
+name: Generate Python Docstrings
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install requests
+
+      - name: Zip the Python codebase
+        run: |
+          zip -r python_code.zip . -x "*.git*" ".github/*" "venv/*" "__pycache__/*"
+
+      - name: Run processing script
+        run: |
+          python - <<'EOF'
+          import time
+          import requests
+
+          # API endpoints
+          UPLOAD_URL = "https://www.sourcemix.tech/pythondoc/castor"
+          POLL_URL = "https://www.sourcemix.tech/task"
+          
+          # ZIP file path
+          zip_file_path = "python_code.zip"
+
+          # JWT token from GitHub secrets
+          jwt_token = "${{ secrets.JWT_TOKEN }}"
+
+          headers = {
+              "Authorization": f"Bearer {jwt_token}",
+              "accept": "application/json"
+          }
+
+          # Upload file
+          with open(zip_file_path, "rb") as zip_file:
+              files = {"zip_file": zip_file}
+              response = requests.post(UPLOAD_URL, headers=headers, files=files)
+
+          if response.status_code != 200:
+              print("Error uploading file:", response.json())
+              exit(1)
+
+          job_data = response.json()
+          task_id = job_data.get("task_id")
+          if not task_id:
+              print("Error: No task_id received")
+              exit(1)
+
+          print(f"File uploaded successfully! Task ID: {task_id}")
+          polling_interval = 10
+
+          while True:
+              poll_response = requests.get(f"{POLL_URL}/{task_id}", headers=headers)
+              if poll_response.status_code == 200:
+                  poll_data = poll_response.json()
+                  status = poll_data.get("status")
+                  if status == "completed":
+                      signed_url = poll_data.get("signed_url")
+                      print(f"✅ Job completed! Download your file: {signed_url}")
+                      download_response = requests.get(signed_url, headers=headers)
+                      if download_response.status_code == 200:
+                          with open("processed_code.zip", "wb") as f:
+                              f.write(download_response.content)
+                          print("Processed code downloaded to processed_code.zip")
+                      else:
+                          print("Error downloading processed file:", download_response.json())
+                      break
+                  elif status == "failed":
+                      print("❌ Job failed.", poll_response.json())
+                      break
+                  else:
+                      print("⏳ Still processing... checking again in 10 seconds.")
+              else:
+                  print("⚠️ Error polling job status:", poll_response.json())
+              time.sleep(polling_interval)
+          EOF
