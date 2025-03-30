@@ -3,20 +3,33 @@ import argparse
 from dotenv import load_dotenv
 
 load_dotenv()
-
 from functions.utilities import find_python_files, create_timestamped_folder
 from functions.graph_context import get_context_graph
 from functions.embedding_retr import write_embeddings, get_Qobj, retrieve_chunks
 
-def main():
-    # Set up argument parsing
-    parser = argparse.ArgumentParser(description='Check for .py files in a specified directory.')
-    parser.add_argument('--path', type=str, help='The path to the directory to check.')
-    parser.add_argument('--prefix', type=str, help='The prefix of the timestamped folder', default='context')
-    # Parse the arguments
-    args = parser.parse_args()
 
-    # Validate that at least one of the arguments is provided
+def main():
+    """main
+
+    This function checks for .py files in a specified directory and processes them to generate a context graph and embeddings.
+
+    Args:
+        --path (str): The path to the directory to check. Required.
+        --prefix (str, optional): The prefix of the timestamped folder. Default is 'context'.
+
+    Returns:
+        None"""
+    parser = argparse.ArgumentParser(
+        description="Check for .py files in a specified directory."
+    )
+    parser.add_argument("--path", type=str, help="The path to the directory to check.")
+    parser.add_argument(
+        "--prefix",
+        type=str,
+        help="The prefix of the timestamped folder",
+        default="context",
+    )
+    args = parser.parse_args()
     if not args.path:
         print("Error: You must provide --path")
         return
@@ -32,9 +45,7 @@ def main():
     else:
         print("No .py files found in the specified directory.")
         return
-    
-    
-    
+
 
 if __name__ == "__main__":
     main()
